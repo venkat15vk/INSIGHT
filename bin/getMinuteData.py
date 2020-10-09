@@ -31,10 +31,10 @@ warnings.filterwarnings('ignore')
 
 #declare public variables
 #dates = [3,4,5,6,7,10,11,12,13,14]
-dates = [13,14,15,16,17]
+dates = [21,22,23,24,25]
 #dates = [3]
 year = 2020
-month = 7
+month = 9
 
 
 consolidated = pd.DataFrame()
@@ -81,7 +81,7 @@ if __name__ == '__main__':
         'trend_macd', 'trend_macd_signal',
        'trend_macd_diff'])
     
-    consolidated.to_csv('/Users/vk/Desktop/SchoolAndResearch/INSIGHT/HFT/data/Week2_StockTestData.csv', index=False)
+    consolidated.to_csv('/Users/vk/Desktop/SchoolAndResearch/INSIGHT/HFT/data/RealWorldTesting/Week2_StockTestData.csv', index=False)
     
     #pcaResult = PrincipalComponentAnalysis.findPCA(consolidated, .95)
     #pcaResult.to_csv('/Users/vk/Desktop/SchoolAndResearch/INSIGHT/HFT/data/StockPCAData.csv', index=False)

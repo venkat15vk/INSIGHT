@@ -13,18 +13,13 @@ engine = create_engine("mysql+pymysql://root:root123!@localhost/INSIGHT")
 
 
 tradeDate = '2020-08-01'  # which will give the results for 14th
-tPlusOneDate = '2020-08-30'
+tPlusOneDate = '2020-09-30'
 
 #SVC symbols - HD
 
 
 excludeSymbol = """
                     'ABCD'
-"""
-
-excludeStrategy = """
-                        'NaiveBayes','LogisticRegression','SVM','RNN'
-            
 """
 
 def main(f):
@@ -116,13 +111,12 @@ def main(f):
         Strategy,
 		Side,
         ROUND(sum(Quantity*Price), 3) as NotionalValue 
-    FROM INSIGHT.RealTime_OrderBook 
+    FROM INSIGHT.DummyOrderBook 
     where 
     Time between '{START}' and '{END}'
-    AND Strategy not in ({EXCLUDE_STRATEGY_LIST})
     AND Symbol not in ({EXCLUDE_SYMBOL_LIST})
     group by Strategy, Side
-    """.format(START=tradeDate,END=tPlusOneDate,EXCLUDE_SYMBOL_LIST=excludeSymbol,EXCLUDE_STRATEGY_LIST=excludeStrategy)
+    """.format(START=tradeDate,END=tPlusOneDate,EXCLUDE_SYMBOL_LIST=excludeSymbol)
     
     #print (query_0)
 
@@ -162,14 +156,13 @@ def main(f):
             Strategy,
             Side,
             ROUND(sum(Quantity*Price), 3) as NotionalValue 
-        FROM INSIGHT.RealTime_OrderBook 
-        where
-            Strategy not in ({EXCLUDE_STRATEGY_LIST}) AND
+        FROM INSIGHT.DummyOrderBook 
+        where 
             Symbol not in ({EXCLUDE_SYMBOL_LIST})
         group by mydate,Strategy, Side
         Order by Strategy
     
-    """ .format(EXCLUDE_SYMBOL_LIST=excludeSymbol,EXCLUDE_STRATEGY_LIST=excludeStrategy)
+    """ .format(EXCLUDE_SYMBOL_LIST=excludeSymbol)
     
 
     result_01 = con.execute(query_01)
@@ -211,14 +204,13 @@ def main(f):
         Symbol, 
         Side,
         ROUND(sum(Quantity*Price), 3) as NotionalValue 
-    FROM INSIGHT.RealTime_OrderBook 
+    FROM INSIGHT.DummyOrderBook 
     where 
     Time between '{START}' and '{END}'
-    AND Strategy not in ({EXCLUDE_STRATEGY_LIST})
     AND Symbol not in ({EXCLUDE_SYMBOL_LIST})
     group by Strategy, Symbol, Side
     order by Strategy, Symbol, Side 
-    """.format(START=tradeDate,END=tPlusOneDate,EXCLUDE_SYMBOL_LIST=excludeSymbol,EXCLUDE_STRATEGY_LIST=excludeStrategy)
+    """.format(START=tradeDate,END=tPlusOneDate,EXCLUDE_SYMBOL_LIST=excludeSymbol)
     
     result_1 = con.execute(query_1)
     bought = dict()
@@ -259,15 +251,14 @@ def main(f):
         count(Side) as TotalTransaction,
         sum(Quantity) as TotalTradedQuantity,
         ROUND(sum(Quantity*Price), 3) as NotionalValue 
-    FROM INSIGHT.RealTime_OrderBook 
+    FROM INSIGHT.DummyOrderBook 
     where 
     Time between '{START}' and '{END}'
     AND Symbol not in ({EXCLUDE_SYMBOL_LIST})
-    AND Strategy not in ({EXCLUDE_STRATEGY_LIST})
     group by Strategy, Symbol, Side
     order by Strategy, Symbol, Side
     
-    """.format(START=tradeDate,END=tPlusOneDate,EXCLUDE_SYMBOL_LIST=excludeSymbol,EXCLUDE_STRATEGY_LIST=excludeStrategy)
+    """.format(START=tradeDate,END=tPlusOneDate,EXCLUDE_SYMBOL_LIST=excludeSymbol)
 
     result_2 = con.execute(query_2)
 
@@ -293,8 +284,10 @@ def main(f):
 
 if __name__ == '__main__':
     
-    pnlFile = "/Users/vk/Desktop/SchoolAndResearch/INSIGHT/HFT/log/pnl.html"
-    os.remove(pnlFile)  # remove old file
+    pnlFile = "/Users/vk/Desktop/SchoolAndResearch/INSIGHT/HFT/log/pnl_dummy.html"
+    
+    if (os.path.isfile(pnlFile)):
+        os.remove(pnlFile)  # remove old file
     
     hour = 9
     

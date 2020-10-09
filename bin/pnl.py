@@ -16,6 +16,11 @@ def PNL():
     fileStr = open('/Users/vk/Desktop/SchoolAndResearch/INSIGHT/HFT/log/pnl.html', 'r').read()
     return (fileStr)
 
+@app.route("/pnl_dummy")
+def PNL_DUMMY():
+    fileStr = open('/Users/vk/Desktop/SchoolAndResearch/INSIGHT/HFT/log/pnl_dummy.html', 'r').read()
+    return (fileStr)
+
 if __name__ == '__main__':
     app.run()
 
